@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# sourcefinder script - 
+# 1. takes a list of WD items known to have a given source (eg ODNB)
+# 2. generates a list of all enWP article matches
+# 3. looks to see if each of those matches has an appropriate link/template somewhere
+# 4. if not, bing! puts it on a list
+# 5. takes list from 4. and generates a pretty citation for it.
+
+# step 0, initialise
+
+# this should be run from within the /scripts directory
+
+cd ~/scripts
+mkdir -p working
+rm working/*
+
+# step 1
+
+curl "http://tools.wmflabs.org/wikidata-todo/beacon.php?prop=1415&source=0" | sed 's/||/\t/g' | grep -v "#" | grep -v ^$ > working/beacon-odnb
+
+# this is going to be a lot to test with, though, so let's just create a local dummy version
+
+echo -e Q518333"\t"101000001 >> working/test-beacon
+echo -e Q1063507"\t"101000002 >> working/test-beacon
+echo -e Q334391"\t"101000003 >> working/test-beacon
+echo -e Q714925"\t"101000004 >> working/test-beacon
+echo -e Q5536034"\t"101000005 >> working/test-beacon
+
+# this will give us just five to work with
+
+
+
+
+# step 2
+
+
+
+
+# step 3
+
+
+
+
+# step 4
+
+
+
+# step 5
