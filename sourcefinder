@@ -37,9 +37,10 @@ COUNTER=`cat working/odnb-trimmed.tsv | wc -l`
 
 for i in `seq 1 $counter` ;
 do `sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
-NAME=`cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//'` ;
-curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`cat working/extract`"&cllimit=max&format=json" | sed 's/}/}\n/g' > working/catjson ;
-
+cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//' > working/name ;
+NAME=`cat working/name` ;
+curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`echo $NAME`"&cllimit=max&format=json" > working/catjson ;
+# this very convoluted way of doing it is because, for some reason, curl does not like doing it any other way and keeps throwing errors
 
 # step 3
 
