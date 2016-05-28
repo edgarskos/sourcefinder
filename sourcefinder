@@ -14,6 +14,7 @@
 # cd ~/scripts # comment out for testing
 mkdir -p working
 rm working/*
+rm lookup.tsv
 
 # step 1 & 2
 
@@ -23,6 +24,14 @@ curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/
 # COL 1 - Wikidata item URL
 # COL 2 - ODNB number
 # COL 3 - enwiki URL if this exists
+
+grep "wikipedia.org" working/odnb-sparql.tsv > working/odnb-trimmed.tsv
+
+# trimmed.tsv now only has WP-matching lines - there's still 42000 of them!
+
+grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed.tsv
+
+# for the purposes of testing replace it with a ten-line version
 
 
 
