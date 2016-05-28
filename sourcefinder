@@ -17,7 +17,7 @@ rm working/*
 
 # step 1
 
-curl "http://tools.wmflabs.org/wikidata-todo/beacon.php?prop=1415&source=0" | sed 's/||/\t/g' | grep -v "#" | grep -v ^$ > working/beacon-odnb
+# curl "http://tools.wmflabs.org/wikidata-todo/beacon.php?prop=1415&source=0" | sed 's/||/\t/g' | grep -v "#" | grep -v ^$ > working/beacon-odnb
 
 # this is going to be a lot to test with, though, so let's just create a local dummy version
 
@@ -26,11 +26,21 @@ echo -e Q1063507"\t"101000002 >> working/test-beacon
 echo -e Q334391"\t"101000003 >> working/test-beacon
 echo -e Q714925"\t"101000004 >> working/test-beacon
 echo -e Q5536034"\t"101000005 >> working/test-beacon
+echo -e Q97100"\t"101060609 >> working/test-beacon
+
+cp working/test-beacon working/odnb-beacon
 
 # this will give us just five to work with
 
 # step 2
 
+curl "https://tools.wmflabs.org/autolist/index.php?language=en&project=wikipedia&category=&depth=12&wdq=CLAIM%5B1415%5D%20and%20LINK%5Benwiki%5D&pagepile=&wdqs=&statementlist=&run=Run&mode_manual=or&mode_cat=or&mode_wdq=or&mode_wdqs=or&mode_find=or&chunk_size=100&download=1" > working/odnb-wd-enwiki
+
+# grab all entries with enwp links and the relevant property
+
+grep -f working/odnb-wd-enwiki odnb-beacon > odnb-list
+
+# find all entries in beacon list which also have enwiki links
 
 
 
