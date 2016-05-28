@@ -41,7 +41,7 @@ cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' 
 NAME=`cat working/name` ;
 QID=`cat working/extract | cut -f 2`
 curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`echo $NAME`"&cllimit=max&format=json" > working/catjson ;
-if [ grep -V "" working/catjson ] ;
+if [ grep -V "Wikipedia articles incorporating a citation from the ODNB" working/catjson ] ;
 then echo -e $QID"\t"NONE >> working/template-logfile ;
 else echo -e $QID"\t"TEMP >> working/template-logfile ;
 fi
