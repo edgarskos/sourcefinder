@@ -33,6 +33,12 @@ grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed.t
 
 # for the purposes of testing replace it with a ten-line version
 
+COUNTER=`cat working/odnb-trimmed.tsv | wc -l`
+
+for i in `seq 1 $counter` ;
+do `sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
+NAME=`cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//'` ;
+curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`cat working/extract`"&cllimit=max&format=json" | sed 's/}/}\n/g' > working/catjson ;
 
 
 # step 3
