@@ -36,7 +36,7 @@ grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed.t
 COUNTER=`cat working/odnb-trimmed.tsv | wc -l`
 
 for i in `seq 1 $counter` ;
-do `sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
+do sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
 cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//' > working/name ;
 NAME=`cat working/name` ;
 QID=`cat working/extract | cut -f 2`
