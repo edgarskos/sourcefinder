@@ -38,7 +38,7 @@ cut -f 3 working/odnb-trimmed | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' |
 COUNTER=`cat working/odnb-trimmed | wc -l`
 
 for i in `seq 1 $counter` ;
-do QID=`"${i}q;d" working/odnb-trimmed | cut -f 2` ;
+do QID=`sed "${i}q;d" working/odnb-trimmed | cut -f 2` ;
 curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`sed "${i}q;d" working/namelist`"&cllimit=max&format=json" > working/catjson ;
 if [ grep -v "Wikipedia articles incorporating a citation from the ODNB" working/catjson ] ;
 then echo -e $QID"\t"NONE >> working/template-logfile ;
