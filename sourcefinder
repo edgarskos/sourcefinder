@@ -38,7 +38,7 @@ curl "https://tools.wmflabs.org/autolist/index.php?language=en&project=wikipedia
 
 # grab all entries with enwp links and the relevant property
 
-grep -f working/odnb-wd-enwiki odnb-beacon > odnb-list
+grep -f working/odnb-wd-enwiki working/odnb-beacon > working/odnb-list
 
 # find all entries in beacon list which also have enwiki links
 
