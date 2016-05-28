@@ -39,7 +39,13 @@ for i in `seq 1 $counter` ;
 do `sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
 cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//' > working/name ;
 NAME=`cat working/name` ;
+QID=`cat working/extract | cut -f 2`
 curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`echo $NAME`"&cllimit=max&format=json" > working/catjson ;
+if [ grep -V "" working/catjson ] ;
+then echo -e $QID"\t"NONE >> working/template-logfile ;
+else echo -e $QID"\t"TEMP >> working/template-logfile ;
+fi
+done
 # this very convoluted way of doing it is because, for some reason, curl does not like doing it any other way and keeps throwing errors
 
 # step 3
