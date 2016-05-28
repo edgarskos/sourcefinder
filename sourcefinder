@@ -18,18 +18,18 @@ rm lookup.tsv
 
 # step 1 & 2
 
-curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/odnb-sparql.tsv
+curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/odnb-sparql
 
 # this file (which takes a couple of secs to generate) is a SPARQL query giving:
 # COL 1 - Wikidata item URL
 # COL 2 - ODNB number
 # COL 3 - enwiki URL if this exists
 
-grep "wikipedia.org" working/odnb-sparql.tsv > working/odnb-trimmed.tsv
+grep "wikipedia.org" working/odnb-sparql > working/odnb-trimmed
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them!
 
-grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | tail -10 > working/odnb-trimmed
 
 # for the purposes of testing replace it with a ten-line version
 
