@@ -15,32 +15,14 @@
 mkdir -p working
 rm working/*
 
-# step 1
+# step 1 & 2
 
-# curl "http://tools.wmflabs.org/wikidata-todo/beacon.php?prop=1415&source=0" | sed 's/||/\t/g' | grep -v "#" | grep -v ^$ > working/beacon-odnb
+curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > output.tsv
 
-# this is going to be a lot to test with, though, so let's just create a local dummy version
-
-echo -e Q518333"\t"101000001 >> working/test-beacon
-echo -e Q1063507"\t"101000002 >> working/test-beacon
-echo -e Q334391"\t"101000003 >> working/test-beacon
-echo -e Q714925"\t"101000004 >> working/test-beacon
-echo -e Q5536034"\t"101000005 >> working/test-beacon
-echo -e Q97100"\t"101060609 >> working/test-beacon
-
-cp working/test-beacon working/odnb-beacon
-
-# this will give us just five to work with
-
-# step 2
-
-curl "https://tools.wmflabs.org/autolist/index.php?language=en&project=wikipedia&category=&depth=12&wdq=CLAIM%5B1415%5D%20and%20LINK%5Benwiki%5D&pagepile=&wdqs=&statementlist=&run=Run&mode_manual=or&mode_cat=or&mode_wdq=or&mode_wdqs=or&mode_find=or&chunk_size=100&download=1" > working/odnb-wd-enwiki
-
-# grab all entries with enwp links and the relevant property
-
-grep -f working/odnb-wd-enwiki working/odnb-beacon > working/odnb-list
-
-# find all entries in beacon list which also have enwiki links
+# this file (which takes a couple of secs to generate) is a SPARQL query giving:
+# COL 1 - Wikidata item URL
+# COL 2 - ODNB number
+# COL 3 - enwiki URL if this exists
 
 
 
