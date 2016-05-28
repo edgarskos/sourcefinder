@@ -29,18 +29,17 @@ grep "wikipedia.org" working/odnb-sparql.tsv > working/odnb-trimmed.tsv
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them!
 
-grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed.tsv
+grep "wikipedia.org" working/odnb-sparql.tsv | tail -10 > working/odnb-trimmed
 
 # for the purposes of testing replace it with a ten-line version
 
-COUNTER=`cat working/odnb-trimmed.tsv | wc -l`
+cut -f 3 working/odnb-trimmed | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//' > working/namelist
+
+COUNTER=`cat working/odnb-trimmed | wc -l`
 
 for i in `seq 1 $counter` ;
-do sed "${i}q;d" working/odnb-trimmed.tsv > working/extract ; # this puts the relevant line into a temp file to save looking it up each time
-cat working/extract | cut -f 3 | sed 's/<https\:\/\/en.wikipedia.org\/wiki\///' | sed 's/>//' > working/name ;
-NAME=`cat working/name` ;
-QID=`cat working/extract | cut -f 2`
-curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`echo $NAME`"&cllimit=max&format=json" > working/catjson ;
+do QID=`"${i}q;d" working/odnb-trimmed | cut -f 2` ;
+curl "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles="`sed "${i}q;d" working/namelist`"&cllimit=max&format=json" > working/catjson ;
 if [ grep -v "Wikipedia articles incorporating a citation from the ODNB" working/catjson ] ;
 then echo -e $QID"\t"NONE >> working/template-logfile ;
 else echo -e $QID"\t"TEMP >> working/template-logfile ;
