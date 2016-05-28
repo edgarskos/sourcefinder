@@ -11,7 +11,7 @@
 
 # this should be run from within the /scripts directory
 
-cd ~/scripts
+# cd ~/scripts # comment out for testing
 mkdir -p working
 rm working/*
 
