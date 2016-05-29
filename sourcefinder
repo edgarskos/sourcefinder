@@ -47,7 +47,7 @@ for i in `seq 1 $COUNTER` ;
 do QID=`sed "${i}q;d" working/odnb-trimmed | cut -f 2` ;
 echo https://en.wikipedia.org/w/api.php?action=query\&prop=categories\&titles=`sed "${i}q;d" working/namelist`\&cllimit=max\&format=json | tr -d $'\r' > working/slug
 # this gives us the line we wish to curl with no linebreaks, thank god
-curl `echo working/slug` > working/catjson
+curl `cat working/slug` > working/catjson
 if [ "`grep -v "Wikipedia articles incorporating a citation from the ODNB" working/catjson`" ] ;
 then echo -e $QID"\t"NONE >> working/template-logfile ;
 else echo -e $QID"\t"TEMP >> working/template-logfile ;
