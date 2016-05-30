@@ -55,7 +55,7 @@ done
 
 # now we have working/odnb-candidates - ID and pagename for everything which definitely doesn't have the template
 
-for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\t''citation not available''\n" >> working/candidates-cited ;  done
+for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\tcitation not available\n" >> working/candidates-cited ;  done
 
 paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/output
 
