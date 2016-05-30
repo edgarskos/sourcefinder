@@ -55,6 +55,6 @@ done
 
 for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\n" >> working/candidates-cited ;  done
 
-paste working/odnb-candidates working/candidates-cited > output
+paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > output
 
 # output now contains all pages which definitely have no template, plus predicted citation for them, go us
