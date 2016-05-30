@@ -18,10 +18,10 @@ grep "wikipedia.org" working/odnb-sparql | sed 's/<https\:\/\/en.wikipedia.org\/
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them! - and nicely tidied up
 
-grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' | tail -500 > working/odnb-trimmed
 
-#  | tail -10
-# for the purposes of testing replace it with a ten-line version?
+# tail -500
+# for the purposes of testing , only look at last 500 entries
 
 cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
