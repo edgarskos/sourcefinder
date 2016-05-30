@@ -28,7 +28,7 @@ grep "wikipedia.org" working/odnb-sparql | sed 's/<https\:\/\/en.wikipedia.org\/
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them! - and nicely tidied up
 
-grep "wikipedia.org" working/odnb-sparql | tail -10 | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | tail -10 | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' > working/odnb-trimmed
 
 # for the purposes of testing replace it with a ten-line version
 
@@ -40,7 +40,7 @@ cut -f 3 working/odnb-trimmed > working/odnb-namelist
 
 # get the TSV table of WP articles with ODNB cites from quarry- https://quarry.wmflabs.org/query/2337 for all normal doi's
 
-curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
+# curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
 
 # this is now id=xxxx, tab, pagename
 
@@ -48,20 +48,16 @@ curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | 
 
 rm output
 
-for i in `cat working/odnb-trimmed | cut -f 2 | sed 's/^101[0]*/id=/g'` ; 
+for i in `cat working/odnb-trimmed | cut -f 1` ; 
 do echo $i ; 
-grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//' | sed 's/|//'`\t''Citation not known''\n" >> output ;
-# this is a list of all articles with a formatted citation or "not known" if citation unknown
+grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//'`\t''Citation not known''\n" >> output ;
+# this is a list of all valid ODNBs with a formatted citation or "not known" if citation unknown
 done
 
-# step 3
-
-
-
-
-
-# step 4
-
-
-
-# step 5
+for i in `cat output | cut -f 1` ; 
+do echo $i ;
+grep "id=$i\t" working/doilist > working/doihits ;
+  for j in `cat working/doihits | cut -f 2` ;
+    do echo $j ;
+    done
+done
