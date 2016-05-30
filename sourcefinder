@@ -9,9 +9,6 @@
 
 # step 0, initialise
 
-# this should be run from within the /scripts directory
-
-# cd ~/scripts # comment out for testing
 #mkdir -p working
 #rm working/*
 
@@ -52,5 +49,5 @@ rm output
 
 for i in `cat working/odnb-namelist` ; #ie all article names known to have a valid OBIN
 do echo $i ; 
-grep "$i" working/doilist >> output ;
+grep $i$ working/doilist >> output ;
 done
