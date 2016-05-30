@@ -28,7 +28,7 @@ grep "wikipedia.org" working/odnb-sparql | sed 's/<https\:\/\/en.wikipedia.org\/
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them! - and nicely tidied up
 
-grep "wikipedia.org" working/odnb-sparql | tail -10 > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | tail -10 | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' > working/odnb-trimmed
 
 # for the purposes of testing replace it with a ten-line version
 
@@ -46,9 +46,14 @@ curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | 
 
 # so! we want to make a list of all articles in the WD list, and for each one, does it have a nice citation?
 
-for i in `cat working/odnb-trimmed | cut -f 2 | sed 's/^101[0]*/id=/g'` | sed 's/$/|/g' ; do grep "$i|" citations.tsv >> output || printf "\n" >> output ;  done
+for i in `cat working/odnb-trimmed | cut -f 2 | sed 's/^101[0]*/id=/g'` ; 
+do echo $i ; 
+grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//' | sed 's/|//'`\t''Citation not known''\n" >> output ;
+# this is a list of all articles with a formatted citation or "not known" if citation unknown
+done
 
 # step 3
+
 
 
 
