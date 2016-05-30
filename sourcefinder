@@ -46,6 +46,8 @@ curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | 
 
 # so! we want to make a list of all articles in the WD list, and for each one, does it have a nice citation?
 
+rm output
+
 for i in `cat working/odnb-trimmed | cut -f 2 | sed 's/^101[0]*/id=/g'` ; 
 do echo $i ; 
 grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//' | sed 's/|//'`\t''Citation not known''\n" >> output ;
