@@ -18,9 +18,10 @@ grep "wikipedia.org" working/odnb-sparql | sed 's/<https\:\/\/en.wikipedia.org\/
 
 # trimmed.tsv now only has WP-matching lines - there's still 42000 of them! - and nicely tidied up
 
-grep "wikipedia.org" working/odnb-sparql | tail -10 | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' > working/odnb-trimmed
 
-# for the purposes of testing replace it with a ten-line version
+#  | tail -10
+# for the purposes of testing replace it with a ten-line version?
 
 cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
@@ -45,8 +46,6 @@ cut -f 2 working/doilist | sort | uniq > working/doi-names
 
 grep -v -f working/doi-names working/odnb-namelist > working/articles-no-odnb
 
-rm working/odnb-candidates
-
 for i in `cat working/articles-no-odnb` ; 
 do echo $i ;
 grep $i working/odnb-trimmed | sed 's/^101[0]*/id=/g' | sed -e 's/^M//' >> working/odnb-candidates ;
@@ -57,3 +56,5 @@ done
 for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\n" >> working/candidates-cited ;  done
 
 paste working/odnb-candidates working/candidates-cited > output
+
+# output now contains all pages which definitely have no template, plus predicted citation for them, go us
