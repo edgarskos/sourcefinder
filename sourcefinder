@@ -49,9 +49,9 @@ cut -f 3 working/odnb-trimmed > working/odnb-namelist
 
 rm output
 
-for i in `cat working/odnb-trimmed` ; 
+for i in `cat working/odnb-trimmed | cut -f 1` ; 
 do echo $i ; 
-grep "`echo $i | cut -f 1`|" citations.tsv >> output || printf "`echo `echo $i | cut -f 1` | sed 's/id=//'`\t''Citation not known''\n" >> output ;
+grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//'`\t''Citation not known''\n" >> output ;
 # this is a list of all valid ODNBs with a formatted citation or "not known" if citation unknown
 done
 
