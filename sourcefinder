@@ -47,7 +47,7 @@ cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
 rm output
 
-for i in `cat working/odnb-namelist` ; #ie all article names known to have a valid OBIN
+for i in `cat working/odnb-namelist | cut -f 1` ; #ie all article names known to have a valid OBIN
 do echo $i ; 
-grep $i$ working/doilist >> output ;
+grep "$i" working/doilist >> output ;
 done
