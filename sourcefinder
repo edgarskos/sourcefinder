@@ -35,6 +35,8 @@ cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
 # curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
 
+cut -f 2 working/doilist | sort | uniq > working/doi-names
+
 # this is now id=xxxx, tab, pagename
 
 # so now we have
@@ -42,6 +44,7 @@ cut -f 2 working/odnb-trimmed > working/odnb-namelist
 # working/odnb-namelist - just the page names from above
 # citations.tsv - the prettified list of ODNB citations 
 # working/doilist - all articles with extant DOI links that reflect an ODNB template
+# working/doi-names - just the page names from above
 
 # so! we want to make a list of all articles in the WD list, and for each one, does it have a nice citation?
 
