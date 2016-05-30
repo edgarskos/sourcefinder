@@ -57,4 +57,13 @@ for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv 
 
 paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > output
 
-# output now contains all pages which definitely have no template, plus predicted citation for them, go us
+rm table
+
+# insert suitable headers here
+
+echo -e "{|" >> table
+echo -e "|-" >> table
+cat output | sed 's/^/| [[/g' | sed 's/\t{/]]\t|| {/g' | sed 's/$/\n|-/g' >> table
+echo -e "|}" >> table
+
+# and then run pywikibot to upload 'table' to the appropriate location
