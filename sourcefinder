@@ -52,5 +52,5 @@ rm output
 
 for i in `cat working/odnb-namelist` ; #ie all article names known to have a valid OBIN
 do echo $i ; 
-grep "$i\n" working/doilist >> output ;
+grep "$i\$" working/doilist >> output ;
 done
