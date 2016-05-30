@@ -1,18 +1,9 @@
 #!/bin/bash
 
-# sourcefinder script - 
-# 1. takes a list of WD items known to have a given source (eg ODNB)
-# 2. generates a list of all enWP article matches
-# 3. looks to see if each of those matches has an appropriate link/template somewhere
-# 4. if not, bing! puts it on a list
-# 5. takes list from 4. and generates a pretty citation for it.
-
 # step 0, initialise
 
 #mkdir -p working
 #rm working/*
-
-# step 1 & 2
 
 # curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/odnb-sparql
 
@@ -56,5 +47,9 @@ rm working/odnb-candidates
 
 for i in `cat working/articles-no-odnb` ; 
 do echo $i ;
-grep $i working/odnb-trimmed | sed 's/^101[0]*/id=/g' >> working/odnb-candidates ;
+grep $i working/odnb-trimmed | sed 's/^101[0]*/id=/g' | sed -e 's/^M//' >> working/odnb-candidates ;
 done
+
+# now we have working/odnb-candidates - ID and pagename for everything which definitely doesn't have the template
+
+for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> output || printf "\n" >> output ;  done
