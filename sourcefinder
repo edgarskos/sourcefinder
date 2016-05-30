@@ -37,6 +37,7 @@ cut -f 3 working/odnb-trimmed > working/odnb-namelist
 # so now we have
 # working/odnb-trimmed - sample of "all articles matching a Wikidata ODNB ID"
 # working/odnb-namelist - just the page names from above
+# citations.tsv - the prettified list of ODNB citations 
 
 # get the TSV table of WP articles with ODNB cites from quarry- https://quarry.wmflabs.org/query/2337 for all normal doi's
 
@@ -48,9 +49,9 @@ cut -f 3 working/odnb-trimmed > working/odnb-namelist
 
 rm output
 
-for i in `cat working/odnb-trimmed | cut -f 1` ; 
+for i in `cat working/odnb-trimmed` ; 
 do echo $i ; 
-grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//'`\t''Citation not known''\n" >> output ;
+grep "`echo $i | cut -f 1`|" citations.tsv >> output || printf "`echo `echo $i | cut -f 1` | sed 's/id=//'`\t''Citation not known''\n" >> output ;
 # this is a list of all valid ODNBs with a formatted citation or "not known" if citation unknown
 done
 
