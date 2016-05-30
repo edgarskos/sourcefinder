@@ -24,7 +24,13 @@ cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
 # get the TSV table of WP articles with ODNB cites from quarry- https://quarry.wmflabs.org/query/2337 for all normal doi's
 
-curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
+# first, ID the most recent version of the Quarry query
+
+curl "https://quarry.wmflabs.org/query/2337" > working/quarry
+
+RUNID=`cat working/quarry | grep qrun_id | cut -d , -f 4 | cut -d \  -f 3`
+
+curl "https://quarry.wmflabs.org/run/$RUNID/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
 
 cut -f 2 working/doilist | sort | uniq > working/doi-names
 
@@ -59,7 +65,7 @@ paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/ou
 rm table
 
 # insert suitable headers here
-
+echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]."
 echo -e "{|" >> table
 echo -e "|-" >> table
 cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> table
