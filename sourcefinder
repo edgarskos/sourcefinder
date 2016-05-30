@@ -32,12 +32,7 @@ grep "wikipedia.org" working/odnb-sparql | tail -10 | sed 's/<https:\/\/en.wikip
 
 # for the purposes of testing replace it with a ten-line version
 
-cut -f 3 working/odnb-trimmed > working/odnb-namelist
-
-# so now we have
-# working/odnb-trimmed - sample of "all articles matching a Wikidata ODNB ID"
-# working/odnb-namelist - just the page names from above
-# citations.tsv - the prettified list of ODNB citations 
+cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
 # get the TSV table of WP articles with ODNB cites from quarry- https://quarry.wmflabs.org/query/2337 for all normal doi's
 
@@ -45,20 +40,17 @@ cut -f 3 working/odnb-trimmed > working/odnb-namelist
 
 # this is now id=xxxx, tab, pagename
 
+# so now we have
+# working/odnb-trimmed - sample of "all articles matching a Wikidata ODNB ID"
+# working/odnb-namelist - just the page names from above
+# citations.tsv - the prettified list of ODNB citations 
+# working/doilist - all articles with extant DOI links that reflect an ODNB template
+
 # so! we want to make a list of all articles in the WD list, and for each one, does it have a nice citation?
 
 rm output
 
-for i in `cat working/odnb-trimmed | cut -f 1` ; 
+for i in `cat working/odnb-namelist` ; #ie all article names known to have a valid OBIN
 do echo $i ; 
-grep "$i|" citations.tsv >> output || printf "`echo $i | sed 's/id=//'`\t''Citation not known''\n" >> output ;
-# this is a list of all valid ODNBs with a formatted citation or "not known" if citation unknown
-done
-
-for i in `cat output | cut -f 1` ; 
-do echo $i ;
-grep "id=$i\t" working/doilist > working/doihits ;
-  for j in `cat working/doihits | cut -f 2` ;
-    do echo $j ;
-    done
+grep "$i\n" working/doilist >> output ;
 done
