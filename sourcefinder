@@ -55,9 +55,9 @@ done
 
 # now we have working/odnb-candidates - ID and pagename for everything which definitely doesn't have the template
 
-for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\n" >> working/candidates-cited ;  done
+for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\t''citation not available''\n" >> working/candidates-cited ;  done
 
-paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > output
+paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/output
 
 rm table
 
@@ -65,7 +65,7 @@ rm table
 
 echo -e "{|" >> table
 echo -e "|-" >> table
-cat output | sed 's/^/| [[/g' | sed 's/\t{/]]\t||<nowiki>{/g' | sed 's/$/<\/nowiki>\n|-/g' >> table
+cat working/output | sed 's/^/|# || [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> table
 echo -e "|}" >> table
 
 # and then run pywikibot to upload 'table' to the appropriate location
