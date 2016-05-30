@@ -65,7 +65,7 @@ paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/ou
 rm table
 
 # insert suitable headers here
-echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]."
+echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> table
 echo -e "{|" >> table
 echo -e "|-" >> table
 cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> table
