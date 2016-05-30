@@ -5,7 +5,9 @@
 #mkdir -p working
 #rm working/*
 
-# curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/odnb-sparql
+curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/sparqldownload
+
+tr -d '\r' < working/sparqldownload > working/odnb-sparql # to get rid of blasted ^M!
 
 # this file (which takes a couple of secs to generate) is a SPARQL query giving:
 # COL 1 - Wikidata item URL
@@ -24,7 +26,7 @@ cut -f 2 working/odnb-trimmed > working/odnb-namelist
 
 # get the TSV table of WP articles with ODNB cites from quarry- https://quarry.wmflabs.org/query/2337 for all normal doi's
 
-# curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
+curl "https://quarry.wmflabs.org/run/91354/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
 
 cut -f 2 working/doilist | sort | uniq > working/doi-names
 
@@ -52,4 +54,6 @@ done
 
 # now we have working/odnb-candidates - ID and pagename for everything which definitely doesn't have the template
 
-for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> output || printf "\n" >> output ;  done
+for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv >> working/candidates-cited || printf "\n" >> working/candidates-cited ;  done
+
+paste working/odnb-candidates working/candidates-cited > output
