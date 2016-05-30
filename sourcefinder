@@ -56,5 +56,5 @@ rm working/odnb-candidates
 
 for i in `cat working/articles-no-odnb` ; 
 do echo $i ;
-grep $i working/odnb-trimmed | cut -f 2-3 |  sed 's/^101[0]*/id=/g' >> working/odnb-candidates ;
+grep $i working/odnb-trimmed | sed 's/^101[0]*/id=/g' >> working/odnb-candidates ;
 done
