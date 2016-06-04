@@ -90,3 +90,7 @@ cd ~/scripts/pywiki-wp
 
 python login.py
 python pagefromfile.py -force -notitle -file:../prepped/odnbtable
+
+# next steps -
+# have the report look for "other" citations, eg a URL or DOI, or just a text ref to the ODNB
+# then flag these up for possible conversion
