@@ -71,12 +71,14 @@ rm prepped/odnbtable
 echo -e "{{-start-}}" >> prepped/odnbtable
 echo -e "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/odnbtable
 echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
-echo -e "This is a trial run with only 500 entries" >> prepped/odnbtable
+echo -e "This is a trial run with only a few hundred entries" >> prepped/odnbtable
 echo -e "{|" >> prepped/odnbtable
 echo -e "|-" >> prepped/odnbtable
-cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> prepped/odnbtable
+cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "citation not available" >> prepped/odnbtable
 echo -e "|}" >> prepped/odnbtable
 echo -e "{{-stop-}}" >> prepped/odnbtable
+
+# for the time being, this omits any without citations
 
 # and then run pywikibot to upload 'table' to the appropriate location
 
