@@ -2,8 +2,11 @@
 
 # step 0, initialise
 
+cd ~/scripts
+# this moves it into a directory which, hopefully will also contain pywikibot!
 mkdir -p working
 rm working/*
+mkdir -p prepped
 
 curl -H "Accept: text/tab-separated-values" "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=PREFIX%20schema%3A%20%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX%20wikibase%3A%20%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0A%0ASELECT%20%3Fcid%20%3Fodnb%20%3Farticle%20WHERE%20%7B%0A%20%20%20%20%3Fcid%20wdt%3AP1415%20%3Fodnb%20.%0A%20%20%20%20OPTIONAL%20%7B%0A%20%20%20%20%20%20%3Farticle%20schema%3Aabout%20%3Fcid%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AinLanguage%20%22en%22%20.%0A%20%20%20%20%20%20%3Farticle%20schema%3AisPartOf%20%3Chttps%3A%2F%2Fen.wikipedia.org%2F%3E%20.%0A%20%20%20%20%7D%0A%7D%20" > working/sparqldownload
 
@@ -62,13 +65,22 @@ for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" citations.tsv 
 
 paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/output
 
-rm table
+rm prepped/odnbtable
 
 # insert suitable headers here
-echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> table
-echo -e "{|" >> table
-echo -e "|-" >> table
-cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> table
-echo -e "|}" >> table
+echo -e "{{-start-}}" > prepped/gb-terms
+echo "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/gb-terms
+echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
+echo -e "This is a trial run with only 500 entries"
+echo -e "{|" >> prepped/odnbtable
+echo -e "|-" >> prepped/odnbtable
+cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> prepped/odnbtable
+echo -e "|}" >> prepped/odnbtable
+echo -e "{{-end-}}" > prepped/gb-terms
 
 # and then run pywikibot to upload 'table' to the appropriate location
+
+cd ~/scripts/pywiki
+
+python login.py
+python pagefromfile.py -force -notitle -file:../prepped/odnbtable
