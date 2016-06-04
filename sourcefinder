@@ -68,7 +68,7 @@ paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/ou
 rm prepped/odnbtable
 
 # insert suitable headers here
-echo -e "{{-start-}}" > prepped/gb-terms
+echo -e "{{-start-}}" > prepped/odnbtable
 echo "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/gb-terms
 echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
 echo -e "This is a trial run with only 500 entries"
@@ -76,11 +76,11 @@ echo -e "{|" >> prepped/odnbtable
 echo -e "|-" >> prepped/odnbtable
 cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> prepped/odnbtable
 echo -e "|}" >> prepped/odnbtable
-echo -e "{{-end-}}" > prepped/gb-terms
+echo -e "{{-end-}}" > prepped/odnbtable
 
 # and then run pywikibot to upload 'table' to the appropriate location
 
-cd ~/scripts/pywiki
+cd ~/scripts/pywiki-wp
 
 python login.py
 python pagefromfile.py -force -notitle -file:../prepped/odnbtable
