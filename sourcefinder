@@ -76,7 +76,7 @@ echo -e "{|" >> prepped/odnbtable
 echo -e "|-" >> prepped/odnbtable
 cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' >> prepped/odnbtable
 echo -e "|}" >> prepped/odnbtable
-echo -e "{{-end-}}" >> prepped/odnbtable
+echo -e "{{-stop-}}" >> prepped/odnbtable
 
 # and then run pywikibot to upload 'table' to the appropriate location
 
