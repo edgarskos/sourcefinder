@@ -78,11 +78,11 @@ echo -e "Source code available at [https://github.com/generalist/sourcefinder/bl
 echo -e "" >> prepped/odnbtable
 echo -e "{|" >> prepped/odnbtable
 echo -e "|-" >> prepped/odnbtable
-cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "citation not available" >> prepped/odnbtable
+cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "title=|" | grep -v "citation not available" >> prepped/odnbtable
 echo -e "|}" >> prepped/odnbtable
 echo -e "{{-stop-}}" >> prepped/odnbtable
 
-# for the time being, this omits any without citations
+# for the time being, this omits any without citations or with malformed citations (no title)
 
 # and then run pywikibot to upload 'table' to the appropriate location
 
