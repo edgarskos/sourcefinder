@@ -17,7 +17,7 @@ tr -d '\r' < working/sparqldownload > working/odnb-sparql # to get rid of blaste
 # COL 2 - ODNB number
 # COL 3 - enwiki URL if this exists
 
-grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' | tail -500 > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | sed 's/%28/(/g' | sed 's/%29/)/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' | tail -500 > working/odnb-trimmed
 
 # tail -500
 # for the purposes of testing , only look at last 500 entries
@@ -95,4 +95,4 @@ python pagefromfile.py -force -notitle -file:../prepped/articles-no-odnb-table
 # 1. have the report look for "other" citations, eg a URL or DOI, or just a text ref to the ODNB
 # # (nb text ref can't be done with Quarry! will need to analyse a DB dump for this)
 # then flag these up for possible conversion
-# 2. do something about special characters in title (particularly brackets)
+# 2. do something about special characters in title (what about apostrophes?)
