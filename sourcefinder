@@ -65,22 +65,22 @@ for i in `cat working/odnb-candidates | cut -f 1` ; do grep "$i|" odnb/citations
 
 paste working/odnb-candidates working/candidates-cited | cut -f 2,4 > working/output
 
-rm prepped/odnbtable
+rm prepped/articles-no-odnb-table
 
 # insert suitable headers here
-echo -e "{{-start-}}" >> prepped/odnbtable
-echo -e "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/odnbtable
-echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template matching the subject of the article. They may contain a differently-formed citation. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
-echo -e "" >> prepped/odnbtable
-echo -e "This is a trial run with only a few hundred entries." >> prepped/odnbtable
-echo -e "" >> prepped/odnbtable
-echo -e "Source code available at [https://github.com/generalist/sourcefinder/blob/master/sourcefinder github]." >> prepped/odnbtable
-echo -e "" >> prepped/odnbtable
-echo -e "{|" >> prepped/odnbtable
-echo -e "|-" >> prepped/odnbtable
-cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "title=|" | grep -v "citation not available" >> prepped/odnbtable
-echo -e "|}" >> prepped/odnbtable
-echo -e "{{-stop-}}" >> prepped/odnbtable
+echo -e "{{-start-}}" >> prepped/articles-no-odnb-table
+echo -e "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/articles-no-odnb-table
+echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template matching the subject of the article. They may contain a differently-formed citation. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/articles-no-odnb-table
+echo -e "" >> prepped/articles-no-odnb-table
+echo -e "This is a trial run with only a few hundred entries." >> prepped/articles-no-odnb-table
+echo -e "" >> prepped/articles-no-odnb-table
+echo -e "Source code available at [https://github.com/generalist/sourcefinder/blob/master/sourcefinder github]." >> prepped/articles-no-odnb-table
+echo -e "" >> prepped/articles-no-odnb-table
+echo -e "{|" >> prepped/articles-no-odnb-table
+echo -e "|-" >> prepped/articles-no-odnb-table
+cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "title=|" | grep -v "citation not available" >> prepped/articles-no-odnb-table
+echo -e "|}" >> prepped/articles-no-odnb-table
+echo -e "{{-stop-}}" >> prepped/articles-no-odnb-table
 
 # for the time being, this omits any without citations or with malformed citations (no title)
 
@@ -89,8 +89,9 @@ echo -e "{{-stop-}}" >> prepped/odnbtable
 cd ~/scripts/pywiki-wp
 
 python login.py
-python pagefromfile.py -force -notitle -file:../prepped/odnbtable
+python pagefromfile.py -force -notitle -file:../prepped/articles-no-odnb-table
 
 # next steps -
 # have the report look for "other" citations, eg a URL or DOI, or just a text ref to the ODNB
+# # (nb text ref can't be done with Quarry! will need to analyse a DB dump for this)
 # then flag these up for possible conversion
