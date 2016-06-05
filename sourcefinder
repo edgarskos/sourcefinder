@@ -70,7 +70,7 @@ rm prepped/odnbtable
 # insert suitable headers here
 echo -e "{{-start-}}" >> prepped/odnbtable
 echo -e "'''User:AGbot/Articles_with_no_ODNB_citation'''" >> prepped/odnbtable
-echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
+echo -e "Report of Wikipedia articles matched to ODNB subjects, which do not currently appear to have a {{tl|cite ODNB}} citation template matching the subject of the article. They may contain a differently-formed citation. Generated on "`date +%F`", from [https://quarry.wmflabs.org/query/2337 Quarry run #$RUNID]." >> prepped/odnbtable
 echo -e "" >> prepped/odnbtable
 echo -e "This is a trial run with only a few hundred entries." >> prepped/odnbtable
 echo -e "" >> prepped/odnbtable
