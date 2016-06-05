@@ -92,6 +92,7 @@ python login.py
 python pagefromfile.py -force -notitle -file:../prepped/articles-no-odnb-table
 
 # next steps -
-# have the report look for "other" citations, eg a URL or DOI, or just a text ref to the ODNB
+# 1. have the report look for "other" citations, eg a URL or DOI, or just a text ref to the ODNB
 # # (nb text ref can't be done with Quarry! will need to analyse a DB dump for this)
 # then flag these up for possible conversion
+# 2. do something about special characters in title (particularly brackets)
