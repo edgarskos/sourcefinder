@@ -17,7 +17,7 @@ tr -d '\r' < working/sparqldownload > working/odnb-sparql # to get rid of blaste
 # COL 2 - ODNB number
 # COL 3 - enwiki URL if this exists
 
-grep "wikipedia.org" working/odnb-sparql | sed "s/<https:\/\/en.wikipedia.org\/wiki\///g" | sed "s/>//g" | sed "s/%20/_/g" | sed "s/%2C/,/g" | sed "s/%C3%A9/é/g" | sed "s/%C3%B6/ö/g" | sed "s/%C3%93/Ó/g" | sed "s/%27/'/g" | sed "s/%28/(/g" | sed "s/%29/)/g" | sed "s/%E2%80%93/–/g" | cut -f 2-3 | sed "s/^101[0]*/id=/g" | tail -500 > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | sed "s/<https:\/\/en.wikipedia.org\/wiki\///g" | sed "s/>//g" | sed "s/%20/_/g" | sed "s/%2C/,/g" | sed "s/%C3%A9/é/g" | sed "s/%C3%B6/ö/g" | sed "s/%C3%93/Ó/g" | sed "s/%27/'/g" | sed "s/%28/(/g" | sed "s/%29/)/g" | sed "s/%E2%80%93/–/g" | sed "s/%C3%AD/í/g" | sed "s/%C5%99/ř/g" | sed "s/%C3%A1/á/g" | sed "s/%C3%9A/Ú/g" | sed "s/%C3%A4/ä/g" | sed "s/%C3%86/Æ/g" | sed "s/%C3%AB/ë/g" | sed "s/%C3%A4/ä/g" | cut -f 2-3 | sed "s/^101[0]*/id=/g" | tail -500 > working/odnb-trimmed
 
 # tail -500
 # for the purposes of testing , only look at last 500 entries
