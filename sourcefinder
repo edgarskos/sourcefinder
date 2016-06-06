@@ -17,7 +17,7 @@ tr -d '\r' < working/sparqldownload > working/odnb-sparql # to get rid of blaste
 # COL 2 - ODNB number
 # COL 3 - enwiki URL if this exists
 
-grep "wikipedia.org" working/odnb-sparql | sed 's/<https:\/\/en.wikipedia.org\/wiki\///g' | sed 's/>//g' | sed 's/%20/_/g' | sed 's/%2C/,/g' | sed 's/%28/(/g' | sed 's/%29/)/g' | cut -f 2-3 | sed 's/^101[0]*/id=/g' | tail -500 > working/odnb-trimmed
+grep "wikipedia.org" working/odnb-sparql | sed "s/<https:\/\/en.wikipedia.org\/wiki\///g" | sed "s/>//g" | sed "s/%20/_/g" | sed "s/%2C/,/g" | sed "s/%C3%A9/é/g" | sed "s/%C3%B6/ö/g" | sed "s/%C3%93/Ó/g" | sed "s/%27/'/g" | sed "s/%28/(/g" | sed "s/%29/)/g" | cut -f 2-3 | sed "s/^101[0]*/id=/g" | tail -500 > working/odnb-trimmed
 
 # tail -500
 # for the purposes of testing , only look at last 500 entries
@@ -33,7 +33,7 @@ curl "https://quarry.wmflabs.org/query/2337" > working/quarry
 
 RUNID=`cat working/quarry | grep qrun_id | cut -d , -f 4 | cut -d \  -f 3`
 
-curl "https://quarry.wmflabs.org/run/$RUNID/output/0/tsv?download=true" | uniq | sed 's/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g' | cut -f 2-3 > working/doilist
+curl "https://quarry.wmflabs.org/run/$RUNID/output/0/tsv?download=true" | uniq | sed "s/\/\/dx.doi.org\/10.1093%2Fref:odnb%2F/id=/g" | cut -f 2-3 > working/doilist
 
 cut -f 2 working/doilist | sort | uniq > working/doi-names
 
@@ -56,7 +56,7 @@ grep -v -f working/doi-names working/odnb-namelist > working/articles-no-odnb
 
 for i in `cat working/articles-no-odnb` ; 
 do echo $i ;
-grep $i working/odnb-trimmed | sed 's/^101[0]*/id=/g' | sed -e 's/^M//' >> working/odnb-candidates ;
+grep $i working/odnb-trimmed | sed "s/^101[0]*/id=/g" | sed -e "s/^M//" >> working/odnb-candidates ;
 done
 
 # now we have working/odnb-candidates - ID and pagename for everything which definitely doesn't have the template
@@ -78,7 +78,7 @@ echo -e "Source code available at [https://github.com/generalist/sourcefinder/bl
 echo -e "" >> prepped/articles-no-odnb-table
 echo -e "{|" >> prepped/articles-no-odnb-table
 echo -e "|-" >> prepped/articles-no-odnb-table
-cat working/output | sed 's/^/| [[/g' | sed 's/\t/]]\t||<nowiki>/g' | sed 's/$/<\/nowiki>\n|-/g' | grep -v "title=|" | grep -v "citation not available" >> prepped/articles-no-odnb-table
+cat working/output | sed "s/^/| [[/g" | sed "s/\t/]]\t||<nowiki>/g" | sed "s/$/<\/nowiki>\n|-/g" | grep -v "title=|" | grep -v "citation not available" >> prepped/articles-no-odnb-table
 echo -e "|}" >> prepped/articles-no-odnb-table
 echo -e "{{-stop-}}" >> prepped/articles-no-odnb-table
 
