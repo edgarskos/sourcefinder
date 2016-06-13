@@ -3,6 +3,10 @@
 # list of all ODNB ids is in indexxml
 # xml metadata files are in /rawxml
 
+# this generates the pretty-formatted ODNB citations from raw XML metadata
+# NOTE - still needs reworked to handle group entries
+
+
 rm citations.tsv
 mkdir working
 rm working/*
