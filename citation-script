@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# list of all ODNB ids is in indexxml
+# xml metadata files are in /rawxml
+
+rm citations.tsv
+mkdir working
+rm working/*
+
+#for i in `seq 1 100`; # use for test version
+for i in `cat indexxml` ; # use for full version
+#for i in `seq 27045 27047`; # use for test version
+do
+xmlstarlet sel -t -v //rdf:Description/dcterms:contributor/oxdc:name/oxdc:keyNames rawxml/10_1093_ref_odnb_$i.xml > working/lastname ;
+xmlstarlet sel -t -v //rdf:Description/dcterms:contributor/oxdc:name/oxdc:namesBeforeKey rawxml/10_1093_ref_odnb_$i.xml > working/firstname ;
+# this first bit sets up the first/last author names for inserting later
+# now dates, which is messy
+unset BORNFIXED ;
+unset DIEDFIXED ;
+unset BORNRANGE ;
+unset DIEDRANGE ;
+unset BORNRANGE1 ;
+unset DIEDRANGE1 ;
+unset BORNRANGE2 ;
+unset DIEDRANGE2 ;
+# first, born
+BORNFIXED=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:birthDate/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+
+BORNRANGE1=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:birthDate/oxdc:range/oxdc:startOfRange/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+BORNRANGE2=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:birthDate/oxdc:range/oxdc:endOfRange/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+
+if [ -n "$BORNRANGE1" ] ; then
+if [ "$BORNRANGE1" = "$BORNRANGE2" ] ; then
+BORNFIXED=$BORNRANGE1 ;
+else
+BORNRANGE=`expr $BORNRANGE1 / 2 + $BORNRANGE2 / 2`
+fi
+fi
+
+DIEDFIXED=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:deathDate/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+
+DIEDRANGE1=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:deathDate/oxdc:range/oxdc:startOfRange/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+DIEDRANGE2=`xmlstarlet sel -t -v //oxdc:bioMetaData/oxdc:deathDate/oxdc:range/oxdc:endOfRange/oxdc:sortDate rawxml/10_1093_ref_odnb_$i.xml | cut -d - -f 1`
+
+if [ -n "$DIEDRANGE1" ] ; then
+if [ "$DIEDRANGE1" = "$DIEDRANGE2" ] ; then
+DIEDFIXED=$DIEDRANGE1 ;
+else
+DIEDRANGE=`expr $DIEDRANGE1 / 2 + $DIEDRANGE2 / 2`
+fi
+fi
+
+#
+if [ -n "$BORNFIXED" ] ; then
+echo $BORNFIXED > working/borndate ;
+else
+echo "c. "$BORNRANGE > working/borndate ;
+fi
+if [ -n "$DIEDFIXED" ] ; then
+echo $DIEDFIXED > working/dieddate ;
+else
+echo "c. "$DIEDRANGE > working/dieddate ;
+fi
+
+echo -e $i"\t{{cite ODNB|id="$i"|title=""`xmlstarlet sel -t -v //rdf:Description/dcterms:title rawxml/10_1093_ref_odnb_$i.xml | sed 's/ , /, /'`"" (""`cat working/borndate`""–""`cat working/dieddate`"")""|origyear=""`xmlstarlet sel -t -v //rdf:Description/oxdc:firstPubDate/oxdc:isodate rawxml/10_1093_ref_odnb_$i.xml | cut -f 1 -d -`""|year=""`xmlstarlet sel -t -v //rdf:Description/dcterms:modified/oxdc:isodate rawxml/10_1093_ref_odnb_$i.xml | cut -f 1 -d -`""|last=""`sed -n '1p' working/lastname`""|first=""`sed -n '1p' working/firstname`""|last2=""`sed -n '2p' working/lastname`""|first2=""`sed -n '2p' working/firstname`""|last3=""`sed -n '3p' working/lastname`""|first3=""`sed -n '3p' working/firstname`""}}" | sed 's/origyear=2004|year=2004/year=2004/' | sed 's/|last3=|first3=//' | sed 's/|last2=|first2=//' >> citations.tsv;
+done
+
+exit
+
